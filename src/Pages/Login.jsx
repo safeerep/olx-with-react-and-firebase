@@ -1,60 +1,48 @@
 import React, { useState, useRef } from "react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import BrandName from "../Components/PartsInNavBar/BrandName";
 
-function Signup() {
+function Login() {
   const navigate = useNavigate();
-  const [user, setUser] = useState("");
   const auth = getAuth();
-  const nameRef = useRef(null);
+  const [isUserNotExisting, setIsUserNotExisting] = useState(false);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isExistingUser, setIsExistingUser] = useState(false);
-  const [userNameState, setUserNameState] = useState(false);
   const [passwordState, setPasswordState] = useState(false);
   const [emaliState, setEmailState] = useState(false);
 
-  const handleSignup = () => {
-    const regex = /^[a-zA-Z\s]+$/;
-    if (!userName.trim() || !regex.test(userName)) {
-      nameRef.current.focus();
-      setUserNameState(true);
-      setTimeout(() => {
-        setUserNameState(false);
-      }, 3000);
-    } else {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          console.log(userCredential.user);
-          navigate("/");
-        })
-        .catch((err) => {
-          const errorCode = err.code;
-          const errorMessage = err.message;
-          if (errorCode === "auth/invalid-email") {
-            setEmailState(true);
-            emailRef.current.focus();
+  const handleLogin = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigate('/')
+      })
+      .catch((err) => {
+        const errorCode = err.code;
+        const errorMessage = err.message;
+        console.log(errorCode);
+        if (errorCode === "auth/invalid-login-credentials") {
+          setIsUserNotExisting(true);
+          setTimeout(() => {
+            setIsUserNotExisting(false);
+          }, 3000);
+        }
+        else if (errorCode === 'auth/invalid-email') {
+            setEmailState(true)
             setTimeout(() => {
-              setEmailState(false);
+                setEmailState(false);
             }, 3000);
-          } else if (errorCode === "auth/weak-password") {
-            setPasswordState(true);
-            passwordRef.current.focus();
+        }
+        else if (errorCode === 'auth/missing-password') {
+            setPasswordState(true)
             setTimeout(() => {
-              setPasswordState(false);
+                setPasswordState(false);
             }, 3000);
-          } else if (errorCode === "auth/email-already-in-use") {
-            setIsExistingUser(true);
-            setTimeout(() => {
-              setIsExistingUser(false);
-            }, 3000);
-          }
-        });
-    }
+        }
+      });
   };
   return (
     <>
@@ -76,29 +64,14 @@ function Signup() {
             </div>
             {/* body */}
             <div className="relative px-12 flex-auto">
-              {isExistingUser && (
-                <p className="text-red-600 p-3 font-semibold">
-                  Please try to login, You are already registered
-                </p>
+              {isUserNotExisting && (
+                <div>
+                  <p className="text-red-600 p-3 font-semibold">
+                    Invalid username or password
+                  </p>
+                </div>
               )}
               <form className="p-3">
-                <p className="p-3">
-                  <input
-                    onChange={(e) => {
-                      setUserName(e.target.value);
-                    }}
-                    ref={nameRef}
-                    className="block w-full border border-black text-gray p-4 outline-0 font-[0.95em]"
-                    type="text"
-                    placeholder="Enter your name"
-                    value={userName}
-                  />
-                </p>
-                {userNameState && (
-                  <p className="text-red-600 p-3 font-bold">
-                    Please enter a valid username
-                  </p>
-                )}
                 <p className="p-3">
                   <input
                     onChange={(e) => {
@@ -135,10 +108,13 @@ function Signup() {
             </div>
             {/*footer*/}
             <div>
-              <p className="text-center pb-3">
-                already have an account?
-                <a className="text-blue-900 underline cursor-pointer" onClick={() => navigate("/login")}>
-                  login
+              <p className="text-center p-3">
+                don't have an account?
+                <a
+                  className="text-blue-900 underline cursor-pointer"
+                  onClick={() => navigate("/signup")}
+                >
+                  Signup
                 </a>
               </p>
             </div>
@@ -153,9 +129,9 @@ function Signup() {
               <button
                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => handleSignup()}
+                onClick={() => handleLogin()}
               >
-                Signup
+                Login
               </button>
             </div>
           </div>
@@ -166,4 +142,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;
