@@ -9,7 +9,6 @@ function PlaceSearch() {
           height="25px"
           viewBox="0 0 1024 1024"
           data-aut-id="icon"
-          className
           fillRule="evenodd"
         >
           <path
@@ -24,7 +23,6 @@ function PlaceSearch() {
           height="24px"
           viewBox="0 0 1024 1024"
           data-aut-id="icon"
-          className
           fillRule="evenodd"
         >
           <path

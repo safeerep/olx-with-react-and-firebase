@@ -4,17 +4,11 @@ import Signup from "../../Pages/Signup";
 
 function Login() {
   const navigate = useNavigate()
-  const [isModalOpen, setModalState] = useState(false)
-  const handleClickOnLogin = () => {
-    console.log("clicked");
-    setModalState(true)
-    navigate('/signup')
-  };
   return (
     <>
       <div
         onClick={() => {
-          handleClickOnLogin();
+          navigate('/signup')
         }}
         className="font-bold cursor-pointer"
       >

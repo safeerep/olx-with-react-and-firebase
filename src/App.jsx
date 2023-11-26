@@ -10,10 +10,12 @@ function App() {
   const navigate = useNavigate();
   return (
     <>
+      {/* <AppContext.Provider> */}
       <Routes>
-        <Route element={<Signup />} path="/signup"></Route>
+          <Route element={<Home />} path="/"></Route>
+          <Route element={<Signup />} path="/signup"></Route>
       </Routes>
-      <Home />
+      {/* </AppContext.Provider> */}
     </>
   );
 }
