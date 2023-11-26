@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body::-webkit-scrollbar {
+    width: 0; 
+}
+
+@layer components {
+    .card {
+      background-color: theme("colors.white");
+      border-radius: theme("borderRadius.lg");
+      padding: theme("spacing.6");
+      box-shadow: theme("boxShadow.xl");
+    }
+    .footerheading {
+        font-size: 14px;
+        font-weight: bolder;
+    }
+    
+}
