@@ -1,11 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../AppContext";
 import BrandName from "../Components/PartsInNavBar/BrandName";
 
 function Login() {
   const navigate = useNavigate();
   const auth = getAuth();
+  const user = useContext(AuthContext)
   const [isUserNotExisting, setIsUserNotExisting] = useState(false);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -17,12 +19,13 @@ function Login() {
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
+        user.setAsUser(userCredential.displayName);
         navigate('/')
       })
       .catch((err) => {
         const errorCode = err.code;
         const errorMessage = err.message;
+        console.log(err);
         console.log(errorCode);
         if (errorCode === "auth/invalid-login-credentials") {
           setIsUserNotExisting(true);
@@ -112,7 +115,10 @@ function Login() {
                 don't have an account?
                 <a
                   className="text-blue-900 underline cursor-pointer"
-                  onClick={() => navigate("/signup")}
+                  onClick={(e) => { 
+                    e.preventDefault()
+                    navigate("/signup")
+                }}
                 >
                   Signup
                 </a>

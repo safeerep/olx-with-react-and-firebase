@@ -1,9 +1,15 @@
 import React from "react";
+import {useNavigate } from 'react-router-dom'
 
 function AddProductButton() {
+  const navigate = useNavigate()
   return (
     <>
-      <div className="relative cursor-pointer">
+      <div 
+      onClick={() => {
+        navigate('/add-product')
+      }}
+      className="relative cursor-pointer">
         <svg width={104} height={48} viewBox="0 0 1603 768" className="_3V9PS">
           <g>
             <path
@@ -25,19 +31,7 @@ function AddProductButton() {
           </g>
         </svg>
         <div className="flex absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-14 font-bold tracking-wide text-blue-900">
-          <svg
-            className="w-4 h-4"
-            viewBox="0 0 1024 1024"
-            data-aut-id="icon"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              className="rui-367TP"
-              d="M414.898 123.739v291.218h-291.218l-97.014 97.014 97.014 97.131h291.218v291.16l97.073 97.071 97.073-97.071v-291.16h291.16l97.131-97.131-97.131-97.014h-291.16v-291.218l-97.073-97.073z"
-            />
-          </svg>
-
+          <i className="fa-solid fa-plus"></i>
           <span>SELL</span>
         </div>
       </div>

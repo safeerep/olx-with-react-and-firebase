@@ -1,11 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../Firebase/config";
+import { setDoc, doc} from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
+import { AuthContext } from "../AppContext";
 import BrandName from "../Components/PartsInNavBar/BrandName";
 
 function Signup() {
   const navigate = useNavigate();
-  const [user, setUser] = useState("");
+  const user = useContext(AuthContext)
   const auth = getAuth();
   const nameRef = useRef(null);
   const emailRef = useRef(null);
@@ -28,13 +31,31 @@ function Signup() {
       }, 3000);
     } else {
       createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then( async (userCredential) => {
           console.log(userCredential.user);
-          navigate("/");
+          const date = new Date().toLocaleDateString();
+          const userData = {
+            Username: userName,
+            Email: email,
+            Password: password,
+            CreatedAt: date,
+          }
+          console.log(`its uid ${userCredential.user.uid}`)
+          await updateProfile(userCredential.user, { displayName: userName});
+          setDoc(doc(db, "users", userCredential.user.uid), userData)
+          .then(() => {
+              console.log("new user signed");
+              user.setAsUser(userName);
+              navigate("/");
+            })
+            .catch(() => {
+              console.log("an error occured");
+            });
         })
         .catch((err) => {
           const errorCode = err.code;
           const errorMessage = err.message;
+          console.log(errorCode)
           if (errorCode === "auth/invalid-email") {
             setEmailState(true);
             emailRef.current.focus();
@@ -137,7 +158,13 @@ function Signup() {
             <div>
               <p className="text-center pb-3">
                 already have an account?
-                <a className="text-blue-900 underline cursor-pointer" onClick={() => navigate("/login")}>
+                <a
+                  className="text-blue-900 underline cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/login");
+                  }}
+                >
                   login
                 </a>
               </p>
