@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../Firebase/config";
 import { setDoc, doc} from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
+import toast, { Toaster } from 'react-hot-toast';
 import { AuthContext } from "../AppContext";
 import BrandName from "../Components/PartsInNavBar/BrandName";
 
 function Signup() {
   const navigate = useNavigate();
+  const notify = () => toast.success('Succcessfullly logged in');
   const user = useContext(AuthContext)
   const auth = getAuth();
   const nameRef = useRef(null);
@@ -46,6 +48,7 @@ function Signup() {
           .then(() => {
               console.log("new user signed");
               user.setAsUser(userName);
+              notify()
               navigate("/");
             })
             .catch(() => {
@@ -189,6 +192,7 @@ function Signup() {
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <Toaster />
     </>
   );
 }

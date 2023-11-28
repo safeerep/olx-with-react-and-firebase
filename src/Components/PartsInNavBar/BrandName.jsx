@@ -1,9 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function BrandName() {
+  const navigate = useNavigate()
   return (
     <>
-      <div className="brandName">
+      <div 
+      onClick={() => {
+        navigate('/')
+      }}
+      className="brandName">
         <svg
           width="48px"
           height="48px"

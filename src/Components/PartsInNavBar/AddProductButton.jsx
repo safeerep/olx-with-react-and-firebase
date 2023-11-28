@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import {useNavigate } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast';
+import { AuthContext } from "../../AppContext";
+
 
 function AddProductButton() {
+  const user = useContext(AuthContext)
   const navigate = useNavigate()
+  const notify = () => toast.error('Please login first to add your product');
+  const checkUserAndNavigate = () => {
+    if (user && user.name) {
+      console.log(user.name);
+      navigate('/add-product')
+    } else {
+      notify()
+    }
+  }
+
   return (
     <>
       <div 
       onClick={() => {
-        navigate('/add-product')
+        checkUserAndNavigate();
       }}
       className="relative cursor-pointer">
         <svg width={104} height={48} viewBox="0 0 1603 768" className="_3V9PS">
@@ -35,6 +49,7 @@ function AddProductButton() {
           <span>SELL</span>
         </div>
       </div>
+      <Toaster />
     </>
   );
 }

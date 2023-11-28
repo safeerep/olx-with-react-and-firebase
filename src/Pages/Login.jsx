@@ -1,11 +1,13 @@
 import React, { useState, useRef, useContext } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import toast, {Toaster } from "react-hot-toast";
 import { AuthContext } from "../AppContext";
 import BrandName from "../Components/PartsInNavBar/BrandName";
 
 function Login() {
   const navigate = useNavigate();
+  const notify = () => toast.success('successfully logged in');
   const auth = getAuth();
   const user = useContext(AuthContext)
   const [isUserNotExisting, setIsUserNotExisting] = useState(false);
@@ -20,6 +22,7 @@ function Login() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         user.setAsUser(userCredential.displayName);
+        notify()
         navigate('/')
       })
       .catch((err) => {
@@ -144,6 +147,7 @@ function Login() {
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <Toaster />
     </>
   );
 }
